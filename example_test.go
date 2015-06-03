@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleNewVisaResource() {
-	myVisaResource, _ := visa.NewVisaResource("usb0::2391::1031::MY44123456::INSTR")
+	myVisaResource, _ := visa.NewResource("usb0::2391::1031::MY44123456::INSTR")
 	fmt.Println(myVisaResource.ResourceString)
 	fmt.Println(myVisaResource.SerialNumber)
 	fmt.Println(myVisaResource.ModelCode)

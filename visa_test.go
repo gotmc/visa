@@ -50,7 +50,7 @@ func TestParsingVisaResourceString(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		resource, err := NewVisaResource(testCase.resourceString)
+		resource, err := NewResource(testCase.resourceString)
 		if resource.InterfaceType != testCase.interfaceType {
 			t.Errorf(
 				"interfaceType == %s, want %s for resource %s",

@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// VisaResource represents a VISA enabled piece of test equipment.
-type VisaResource struct {
+// Resource represents the resource for a VISA enabled piece of test equipment.
+type Resource struct {
 	ResourceString string
 	InterfaceType  string
 	BoardIndex     uint16
@@ -19,9 +19,9 @@ type VisaResource struct {
 	ResourceClass  string
 }
 
-// NewVisaResource creates a new VisaResource using the given VISA resourceString.
-func NewVisaResource(resourceString string) (visa *VisaResource, err error) {
-	visa = &VisaResource{
+// NewResource creates a new Resource using the given VISA resourceString.
+func NewResource(resourceString string) (visa *Resource, err error) {
+	visa = &Resource{
 		ResourceString: resourceString,
 		InterfaceType:  "",
 		BoardIndex:     0,
