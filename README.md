@@ -34,7 +34,7 @@ submit a [pull request][].  [GitHub Flow][] is summarized as:
 - Once it is merged and pushed to `master`, you can and *should* deploy
   immediately.
 
-## Pull Requests
+## Testing
 
 Prior to submitting a [pull request][], please run:
 
@@ -43,6 +43,13 @@ $ gofmt
 $ golint
 $ go vet
 $ go test
+```
+
+To update and view the test coverage report:
+
+```bash
+$ go test -coverprofile coverage.out
+$ go tool cover -html coverage.out
 ```
 
 ## License
