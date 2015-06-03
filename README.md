@@ -51,7 +51,7 @@ $ go test
 [LICENSE.txt][] file for more information.
 
 [GitHub Flow]: http://scottchacon.com/2011/08/31/github-flow.html
-[LICENSE.txt]: https://github.com/gotmc/usbtmc/blob/master/LICENSE.txt
+[LICENSE.txt]: https://github.com/gotmc/visa/blob/master/LICENSE.txt
 [pull request]: https://help.github.com/articles/using-pull-requests
 [Scott Chacon]: http://scottchacon.com/about.html
 [visa]: https://github.com/gotmc/visa
