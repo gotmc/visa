@@ -2,6 +2,8 @@
 
 Go-based VISA resource manager.
 
+[![GoDoc][godoc image]][godoc link]
+
 ## Installation
 
 ```bash
@@ -58,6 +60,8 @@ $ go tool cover -html coverage.out
 [LICENSE.txt][] file for more information.
 
 [GitHub Flow]: http://scottchacon.com/2011/08/31/github-flow.html
+[godoc image]: https://godoc.org/github.com/gotmc/visa?status.svg
+[godoc link]: https://godoc.org/github.com/gotmc/visa
 [LICENSE.txt]: https://github.com/gotmc/visa/blob/master/LICENSE.txt
 [pull request]: https://help.github.com/articles/using-pull-requests
 [Scott Chacon]: http://scottchacon.com/about.html
