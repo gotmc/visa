@@ -1,9 +1,16 @@
 # visa
 
-Go-based VISA resource manager.
+Go-based Virtual Instrument Software Architecture (VISA) resource
+manager.
 
 [![GoDoc][godoc image]][godoc link]
 [![License Badge][license image]][LICENSE.txt]
+
+## Background
+
+This library has the ability to parse VISA resource strings. The primary
+source of information is the *VPP-4.3: The VISA Library* dated June 19,
+2014, which can be found at the [IVI Specifications webpage][ivi-specs].
 
 ## Installation
 
@@ -63,6 +70,7 @@ $ go tool cover -html coverage.out
 [GitHub Flow]: http://scottchacon.com/2011/08/31/github-flow.html
 [godoc image]: https://godoc.org/github.com/gotmc/visa?status.svg
 [godoc link]: https://godoc.org/github.com/gotmc/visa
+[ivi-specs]: http://www.ivifoundation.org/specifications/
 [LICENSE.txt]: https://github.com/gotmc/visa/blob/master/LICENSE.txt
 [license image]: https://img.shields.io/badge/license-MIT-blue.svg
 [pull request]: https://help.github.com/articles/using-pull-requests
