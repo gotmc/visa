@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -45,52 +44,4 @@ func NewResource(address string) (Resource, error) {
 		return nil, fmt.Errorf("The %s interface hasn't been registered.", interfaceType)
 	}
 	return driver.Open(address)
-}
-
-func createTCPIPResource(address string) (Resource, error) {
-	return nil, errors.New("createTCPIPResource hasn't been implemented yet")
-}
-
-func createUSBResource(boardIndex int, partialResource string) (Resource, error) {
-	regexString := `(?P<manufacturerID>[^\s:]+)::` +
-		`(?P<modelCode>[^\s:]+)` +
-		`(::(?P<serialNumber>[^\s:]+))?` +
-		`::(?P<resourceClass>[^\s:]+)$`
-	re := regexp.MustCompile(regexString)
-	res := re.FindStringSubmatch(partialResource)
-	subexpNames := re.SubexpNames()
-	matchMap := map[string]string{}
-	for i, n := range res {
-		matchMap[subexpNames[i]] = string(n)
-	}
-	if matchMap["resourceClass"] != "INSTR" {
-		return nil, errors.New("visa: resource class was not instr")
-	}
-
-	var resource UsbInstrResource
-
-	resource.InterfaceNum = boardIndex
-	resource.InterfaceType = usbInterface
-	resource.resourceClass = instrResource
-
-	if matchMap["manufacturerID"] != "" {
-		manufacturerID, err := strconv.ParseUint(matchMap["manufacturerID"], 0, 16)
-		if err != nil {
-			return resource, errors.New("visa: manufacturerID error")
-		}
-		resource.ManufacturerID = uint16(manufacturerID)
-	}
-
-	if matchMap["modelCode"] != "" {
-		modelCode, err := strconv.ParseUint(matchMap["modelCode"], 0, 16)
-		if err != nil {
-			return resource, errors.New("visa: modelCode error")
-		}
-		resource.ModelCode = uint16(modelCode)
-	}
-
-	// visa.SerialNumber = matchMap["serialNumber"]
-
-	return resource, nil
-
 }
