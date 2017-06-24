@@ -5,6 +5,24 @@
 
 package visa
 
+type InterfaceType int
+
+const (
+	USBTMC InterfaceType = iota
+	TCPIP
+	ASRL
+)
+
+var interfaceDescription = map[InterfaceType]string{
+	USBTMC: "USBTMC",
+	TCPIP:  "TCP-IP",
+	ASRL:   "Serial",
+}
+
+func (i InterfaceType) String() string {
+	return interfaceDescription[i]
+}
+
 type interfaceType uint16
 type viVersion uint32
 type viRsrc string

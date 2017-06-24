@@ -1,55 +1,17 @@
+// Copyright (c) 2017 The visa developers. All rights reserved.
+// Project site: https://github.com/gotmc/ivi
+// Use of this source code is governed by a MIT-style license that
+// can be found in the LICENSE.txt file for the project.
+
 package visa
 
 import (
 	"errors"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
 )
-
-type InterfaceType int
-
-const (
-	USBTMC InterfaceType = iota
-	TCPIP
-	ASRL
-)
-
-var interfaceDescription = map[InterfaceType]string{
-	USBTMC: "USBTMC",
-	TCPIP:  "TCP-IP",
-	ASRL:   "Serial",
-}
-
-func (i InterfaceType) String() string {
-	return interfaceDescription[i]
-}
-
-// A map of registered matchers for searching.
-var drivers = make(map[InterfaceType]Driver)
-
-// Driver defines the behavior required by types that want
-// to implement a new search type.
-type Driver interface {
-	Open(address string) (Resource, error)
-}
-
-// Register is called to register a driver for use by the program.
-func Register(interfaceType InterfaceType, driver Driver) {
-	if _, exists := drivers[interfaceType]; exists {
-		log.Fatalln(interfaceType, "Driver already registered")
-	}
-
-	log.Println("Register", interfaceType, "driver")
-	drivers[interfaceType] = driver
-}
-
-// Resource defines the interface for VISA Resources.
-type ResourceFoo interface {
-	GetResourceClass() string
-}
 
 // The ResourceTemplate struct fields come from Table 3.2.1 VISA Template
 // Required Attributes in the VPP-4.3 The VISA Library standard.
