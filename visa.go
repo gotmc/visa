@@ -3,13 +3,51 @@ package visa
 import (
 	"errors"
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
+type InterfaceType int
+
+const (
+	USBTMC InterfaceType = iota
+	TCPIP
+	ASRL
+)
+
+var interfaceDescription = map[InterfaceType]string{
+	USBTMC: "USBTMC",
+	TCPIP:  "TCP-IP",
+	ASRL:   "Serial",
+}
+
+func (i InterfaceType) String() string {
+	return interfaceDescription[i]
+}
+
+// A map of registered matchers for searching.
+var drivers = make(map[InterfaceType]Driver)
+
+// Driver defines the behavior required by types that want
+// to implement a new search type.
+type Driver interface {
+	Open(address string) (Resource, error)
+}
+
+// Register is called to register a driver for use by the program.
+func Register(interfaceType InterfaceType, driver Driver) {
+	if _, exists := drivers[interfaceType]; exists {
+		log.Fatalln(interfaceType, "Driver already registered")
+	}
+
+	log.Println("Register", interfaceType, "driver")
+	drivers[interfaceType] = driver
+}
+
 // Resource defines the interface for VISA Resources.
-type Resource interface {
+type ResourceFoo interface {
 	GetResourceClass() string
 }
 
@@ -58,39 +96,41 @@ type AsrlInstrResource struct {
 	Port uint16
 }
 
-// NewResource creates a new Resource using the given VISA resourceString.
-func NewResource(resourceString string) (Resource, error) {
+func determineInterfaceType(address string) (InterfaceType, error) {
 	regexString := `^(?P<interfaceType>[A-Za-z]+)(?P<boardIndex>\d*)::` +
 		`(?P<allElse>.*)$`
 	re := regexp.MustCompile(regexString)
-	res := re.FindStringSubmatch(resourceString)
+	res := re.FindStringSubmatch(address)
 	subexpNames := re.SubexpNames()
 	matchMap := map[string]string{}
 	for i, n := range res {
 		matchMap[subexpNames[i]] = string(n)
 	}
 	interfaceType := strings.ToUpper(matchMap["interfaceType"])
-	// Determine the boardIndex if one was given, if not default to 0
-	boardIndex := 0
-	i, err := strconv.Atoi(matchMap["boardIndex"])
-	if err != nil && matchMap["boardIndex"] != "" {
-		return nil, fmt.Errorf("Bad board index parsing resource string: %s", err)
-	} else if err == nil {
-		boardIndex = i
+	switch interfaceType {
+	case "USB":
+		return USBTMC, nil
+	case "TCPIP":
+		return TCPIP, nil
+	default:
+		return ASRL, fmt.Errorf("%s is not a valid VISA interface type.", interfaceType)
 	}
-	allElse := strings.ToUpper(matchMap["allElse"])
-
-	if interfaceType == "USB" {
-		return createUSBResource(boardIndex, allElse)
-	} else if interfaceType == "TCPIP" {
-		return createTCPIPResource(resourceString)
-	} else {
-		return nil, errors.New("Interface type not supported")
-	}
-
 }
 
-func createTCPIPResource(resourceString string) (Resource, error) {
+// NewResource creates a new Resource using the given VISA address.
+func NewResource(address string) (Resource, error) {
+	interfaceType, err := determineInterfaceType(address)
+	if err != nil {
+		return nil, errors.New("Problem determining interface type in address.")
+	}
+	driver, exists := drivers[interfaceType]
+	if !exists {
+		return nil, fmt.Errorf("The %s interface hasn't been registered.", interfaceType)
+	}
+	return driver.Open(address)
+}
+
+func createTCPIPResource(address string) (Resource, error) {
 	return nil, errors.New("createTCPIPResource hasn't been implemented yet")
 }
 
