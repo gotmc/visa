@@ -9,7 +9,27 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 )
+
+// A map of registered matchers for searching.
+var drivers = make(map[InterfaceType]Driver)
+
+// Driver defines the behavior required by types that want
+// to implement a new search type.
+type Driver interface {
+	Open(address string) (Resource, error)
+}
+
+// Register is called to register a driver for use by the program.
+func Register(interfaceType InterfaceType, driver Driver) {
+	if _, exists := drivers[interfaceType]; exists {
+		// TODO(mdr): Should we log.Fatalln, or should we just re-register the
+		// newer driver?
+		log.Fatalln(interfaceType, "Driver already registered")
+	}
+	drivers[interfaceType] = driver
+}
 
 type Resource interface {
 	io.ReadWriteCloser

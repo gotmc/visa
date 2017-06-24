@@ -8,9 +8,16 @@ manager.
 
 ## Background
 
-This library has the ability to parse VISA resource strings. The primary
-source of information is the *VPP-4.3: The VISA Library* dated June 19,
-2014, which can be found at the [IVI Specifications webpage][ivi-specs].
+The primary purpose of this package is to parse a VISA resource address
+string in order to create a new VISA resource, which abstracts the
+interface type---USBTMC, TCPIP, ASRL. By registering a driver for the
+interface type, application developers can decide which interface types
+to support and which to exclude, so as to not unnecessarily bloat their
+packages.
+
+The primary source of information is the *VPP-4.3: The VISA Library*
+dated June 19, 2014, which can be found at the [IVI Specifications
+webpage][ivi-specs].
 
 ## Installation
 
