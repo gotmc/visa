@@ -73,29 +73,6 @@ type genericInstrResource struct {
 	InterfaceInstrumentName string        // VI_ATTR_INTF_INST_NAME
 }
 
-// UsbInstrResource represents a VISA Instrument Control Resource using the USB
-// interface.
-type UsbInstrResource struct {
-	ResourceTemplate
-	genericInstrResource
-	CompliantWith4882 bool   // VI_ATTR_4882_COMPLIANT
-	ManufacturerID    uint16 // VI_ATTR_MANF_ID
-	ModelCode         uint16 // VI_ATTR_MODEL_CODE
-	ManufacturerName  string // VI_ATTR_MANF_NAME
-	ModelName         string // VI_ATTR_MODEL_NAME
-	SerialNumber      string // VI_ATTR_USB_SERIAL_NUM
-	UsbInterfaceNum   uint16 // VI_ATTR_USB_INTFC_NUM
-	MaxInterruptSize  uint16 // VI_ATTR_USB_MAX_INTR_SIZE
-	UsbProtocol       int16  // VI_ATTR_USB_PROTOCOL
-}
-
-// AsrlInstrResource represents a VISA Instrument Control Resource using an
-// asynchronous serial (ASRL) hardware interface.
-type AsrlInstrResource struct {
-	Resource
-	Port uint16
-}
-
 func determineInterfaceType(address string) (InterfaceType, error) {
 	regexString := `^(?P<interfaceType>[A-Za-z]+)(?P<boardIndex>\d*)::` +
 		`(?P<allElse>.*)$`
