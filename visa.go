@@ -13,28 +13,6 @@ import (
 	"strings"
 )
 
-// The ResourceTemplate struct fields come from Table 3.2.1 VISA Template
-// Required Attributes in the VPP-4.3 The VISA Library standard.
-type ResourceTemplate struct {
-	ResourceImplementedVersion viVersion     // VI_ATTR_RSRC_IMPL_VERSION
-	ResourceLockState          viAccessMode  // VI_ATTR_RSRC_LOCK_STATE
-	ResourceManufacturerID     uint          // VI_ATTR_RSRC_MANF_ID
-	ResourceManufacturerName   string        // VI_ATTR_RSRC_MANF_NAME
-	ResourceName               viRsrc        // VI_ATTR_RSRC_NAME
-	ResourceSpecVersion        viVersion     // VI_ATTR_RSRC_SPEC_VERSION
-	resourceClass              resourceClass // VI_ATTR_RSRC_CLASS
-}
-
-func (resource ResourceTemplate) GetResourceClass() string {
-	return string(resource.resourceClass)
-}
-
-type genericInstrResource struct {
-	InterfaceNum            int           // VI_ATTR_INTF_NUM
-	InterfaceType           interfaceType // VI_ATTR_INTF_TYPE
-	InterfaceInstrumentName string        // VI_ATTR_INTF_INST_NAME
-}
-
 func determineInterfaceType(address string) (InterfaceType, error) {
 	regexString := `^(?P<interfaceType>[A-Za-z]+)(?P<boardIndex>\d*)::` +
 		`(?P<allElse>.*)$`
