@@ -9,16 +9,11 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gotmc/ivi"
 	"github.com/gotmc/visa"
 )
 
 // tcpipDriver implements the ivi.Driver interface.
 type Driver struct{}
-
-type Connection struct {
-	conn net.Conn
-}
 
 func (d Driver) Open(address string) (visa.Resource, error) {
 	var c Connection
@@ -33,6 +28,10 @@ func (d Driver) Open(address string) (visa.Resource, error) {
 	return &c, nil
 }
 
+type Connection struct {
+	conn net.Conn
+}
+
 func (c *Connection) Read(p []byte) (n int, err error) {
 	return 0, nil
 }
@@ -45,6 +44,14 @@ func (c *Connection) Close() error {
 	return c.conn.Close()
 }
 
+func (c *Connection) WriteString(s string) (int, error) {
+	return 0, nil
+}
+
+func (c *Connection) Query(s string) (value string, err error) {
+	return "foo", nil
+}
+
 func getTcpAddress(address string) (string, error) {
 	return "127.0.0.1:5025", nil
 }
@@ -52,5 +59,5 @@ func getTcpAddress(address string) (string, error) {
 // init registers the driver with the program.
 func init() {
 	var driver Driver
-	ivi.Register(ivi.Tcpip, driver)
+	visa.Register(visa.TCPIP, driver)
 }

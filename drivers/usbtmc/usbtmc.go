@@ -10,13 +10,8 @@ import (
 	"github.com/gotmc/visa"
 )
 
-// Driver implements the ivi.Driver interface.
+// Driver implements the visa.Driver interface.
 type Driver struct {
-}
-
-type Connection struct {
-	ctx *usbtmc.Context
-	dev *usbtmc.Device
 }
 
 func (d Driver) Open(address string) (visa.Resource, error) {
@@ -25,6 +20,11 @@ func (d Driver) Open(address string) (visa.Resource, error) {
 	dev, err := c.ctx.NewDevice(address)
 	c.dev = dev
 	return &c, err
+}
+
+type Connection struct {
+	ctx *usbtmc.Context
+	dev *usbtmc.Device
 }
 
 func (c *Connection) Read(p []byte) (n int, err error) {
@@ -43,8 +43,16 @@ func (c *Connection) Close() error {
 	return c.ctx.Close()
 }
 
+func (c *Connection) WriteString(s string) (int, error) {
+	return c.dev.WriteString(s)
+}
+
+func (c *Connection) Query(s string) (value string, err error) {
+	return c.dev.Query(s)
+}
+
 // init registers the driver with the program.
 func init() {
 	var driver Driver
-	visa.Register(visa.Usbtmc, driver)
+	visa.Register(visa.USBTMC, driver)
 }

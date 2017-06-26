@@ -33,7 +33,7 @@ func Register(interfaceType InterfaceType, driver Driver) {
 
 type Resource interface {
 	io.ReadWriteCloser
-	WriterString(s string) (n int, err error)
+	WriteString(s string) (n int, err error)
 	Query(s string) (value string, err error)
 }
 
