@@ -19,6 +19,18 @@ The primary source of information is the *VPP-4.3: The VISA Library*
 dated June 19, 2014, which can be found at the [IVI Specifications
 webpage][ivi-specs].
 
+## Usage
+
+In order to not bloat an end developer's application, the desired HW interface
+drivers have to be registered, similar to Go's SQL package. Currently,
+there are TCPIP and USBTMC drivers available.
+
+```go
+"github.com/gotmc/visa"
+_ "github.com/gotmc/visa/drivers/tcpip"
+_ "github.com/gotmc/visa/drivers/usbtmc"
+```
+
 ## Installation
 
 ```bash
