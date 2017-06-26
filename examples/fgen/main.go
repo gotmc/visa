@@ -6,8 +6,6 @@
 package main
 
 import (
-	"fmt"
-	"io"
 	"log"
 	"time"
 
@@ -34,26 +32,25 @@ func main() {
 
 	log.Printf("%.2fs to setup VISA resource\n", time.Since(start).Seconds())
 
-	fg.Write([]byte("apply:sinusoid 2340, 0.1, 0.0")) // Write using byte slice
-	io.WriteString(fg, "burst:internal:period 0.112") // WriteString using io's Writer interface
-	fg.WriteString("burst:internal:period 0.112")     // WriteString
-	fg.WriteString("burst:ncycles 131")
-	fg.WriteString("burst:state on")
-	fg.WriteString("*idn?")
+	fgen.WriteString("apply:sinusoid 2340, 0.1, 0.0")
+	fgen.WriteString("burst:internal:period 0.112")
+	fgen.WriteString("burst:ncycles 131")
+	fgen.WriteString("burst:state on")
+	fgen.WriteString("*idn?")
 
 	start = time.Now()
-	var buf [1024]byte
-	bytesRead, err := fg.Read(buf[:])
+	var buf []byte
+	bytesRead, err := fgen.Read(buf)
 	log.Printf("%.2fs to read %d bytes\n", time.Since(start).Seconds(), bytesRead)
 	if err != nil {
 		log.Printf("Error reading: %s", err)
 	}
-	fmt.Printf("Read %d bytes = %s", bytesRead, buf[12:bytesRead])
-	fmt.Printf("Last rune read = %x\n", buf[bytesRead-1:bytesRead])
-	fmt.Printf("Last rune read = %q\n", buf[bytesRead-1:bytesRead])
-	fmt.Printf("Read %d bytes = %v\n", bytesRead, buf[:12])
+	// fmt.Printf("Read %d bytes = %s", bytesRead, buf[12:bytesRead])
+	// fmt.Printf("Last rune read = %x\n", buf[bytesRead-1:bytesRead])
+	// fmt.Printf("Last rune read = %q\n", buf[bytesRead-1:bytesRead])
 
-	defer fg.Close()
-	fmt.Printf("Goodbye arbitrary waveform generator %s\n", fg.Device.Descriptor.SerialNumber)
+	log.Println("Made it here!")
+
+	defer fgen.Close()
 
 }
