@@ -16,7 +16,7 @@ type Driver struct {
 
 func (d Driver) Open(address string) (visa.Resource, error) {
 	var c Connection
-	c.ctx = usbtmc.NewContext()
+	c.ctx, _ = usbtmc.NewContext()
 	dev, err := c.ctx.NewDevice(address)
 	c.dev = dev
 	return &c, err

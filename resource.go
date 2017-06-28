@@ -8,7 +8,6 @@ package visa
 import (
 	"errors"
 	"fmt"
-	"io"
 	"log"
 )
 
@@ -32,7 +31,9 @@ func Register(interfaceType InterfaceType, driver Driver) {
 }
 
 type Resource interface {
-	io.ReadWriteCloser
+	Close() error
+	Read(p []byte) (n int, err error)
+	Write(p []byte) (n int, err error)
 	WriteString(s string) (n int, err error)
 	Query(s string) (value string, err error)
 }
