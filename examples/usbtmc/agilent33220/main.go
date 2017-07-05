@@ -6,51 +6,60 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"time"
 
+	_ "github.com/gotmc/usbtmc/driver/google"
 	"github.com/gotmc/visa"
-	_ "github.com/gotmc/visa/drivers/tcpip"
-	_ "github.com/gotmc/visa/drivers/usbtmc"
+	_ "github.com/gotmc/visa/driver/usbtmc"
 )
 
 // Can use either a USBTMC or TCP/IP socker to communicate with the function
 // generator. Below are two different VISA address strings.
 const (
 	usbAddress string = "USB0::2391::1031::MY44035349::INSTR"
-	tcpAddress string = "TCPIP::10.12.100.242::2055::SOCKET"
 )
 
 func main() {
 
+	// Create new VISA resource
 	start := time.Now()
-	fgen, err := visa.NewResource(usbAddress)
+	fg, err := visa.NewResource(usbAddress)
 	if err != nil {
 		log.Fatal("Couldn't open the resource for the function generator")
 	}
-	defer fgen.Close()
-
 	log.Printf("%.2fs to setup VISA resource\n", time.Since(start).Seconds())
 
-	fgen.WriteString("apply:sinusoid 2340, 0.1, 0.0")
-	fgen.WriteString("burst:internal:period 0.112")
-	fgen.WriteString("burst:ncycles 131")
-	fgen.WriteString("burst:state on")
-	fgen.WriteString("*idn?")
+	// Configure function generator
+	fg.WriteString("*CLS\n")
+	fg.WriteString("burst:state off\n")
+	fg.Write([]byte("apply:sinusoid 2340, 0.1, 0.0\n")) // Write using byte slice
+	io.WriteString(fg, "burst:internal:period 0.112\n") // WriteString using io's Writer interface
+	fg.WriteString("burst:internal:period 0.112\n")     // WriteString
+	fg.WriteString("burst:ncycles 131\n")
+	fg.WriteString("burst:state on\n")
 
-	start = time.Now()
-	var buf []byte
-	bytesRead, err := fgen.Read(buf)
-	log.Printf("%.2fs to read %d bytes\n", time.Since(start).Seconds(), bytesRead)
+	// Query using the query method
+	queries := []string{"volt", "freq", "volt:offs", "volt:unit"}
+	queryRange(fg, queries)
+
+	// Close the function generator and USBTMC context and check for errors.
+	err = fg.Close()
 	if err != nil {
-		log.Printf("Error reading: %s", err)
+		log.Printf("error closing fg: %s", err)
 	}
-	// fmt.Printf("Read %d bytes = %s", bytesRead, buf[12:bytesRead])
-	// fmt.Printf("Last rune read = %x\n", buf[bytesRead-1:bytesRead])
-	// fmt.Printf("Last rune read = %q\n", buf[bytesRead-1:bytesRead])
+}
 
-	log.Println("Made it here!")
-
-	defer fgen.Close()
-
+func queryRange(fg visa.Resource, r []string) {
+	for _, q := range r {
+		ws := fmt.Sprintf("%s?", q)
+		s, err := fg.Query(ws)
+		if err != nil {
+			log.Printf("Error reading: %v", err)
+		} else {
+			log.Printf("Query %s? = %s", q, s)
+		}
+	}
 }
