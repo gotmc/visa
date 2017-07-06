@@ -6,7 +6,6 @@
 package visa
 
 import (
-	"errors"
 	"fmt"
 	"log"
 )
@@ -30,6 +29,7 @@ func Register(interfaceType InterfaceType, driver Driver) {
 	drivers[interfaceType] = driver
 }
 
+// Resource is the interface that defines a VISA resource.
 type Resource interface {
 	Close() error
 	Read(p []byte) (n int, err error)
@@ -42,11 +42,11 @@ type Resource interface {
 func NewResource(address string) (Resource, error) {
 	interfaceType, err := determineInterfaceType(address)
 	if err != nil {
-		return nil, errors.New("Problem determining interface type in address.")
+		return nil, fmt.Errorf("interface type unidentifiable in address %s", address)
 	}
 	driver, exists := drivers[interfaceType]
 	if !exists {
-		return nil, fmt.Errorf("The %s interface hasn't been registered.", interfaceType)
+		return nil, fmt.Errorf("unregistered interface: %s", interfaceType)
 	}
 	return driver.Open(address)
 }

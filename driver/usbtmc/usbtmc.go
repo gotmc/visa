@@ -14,6 +14,7 @@ import (
 type Driver struct {
 }
 
+// Open opens a VISA resource given a VISA address string.
 func (d Driver) Open(address string) (visa.Resource, error) {
 	var c Connection
 	c.ctx, _ = usbtmc.NewContext()
@@ -22,19 +23,23 @@ func (d Driver) Open(address string) (visa.Resource, error) {
 	return &c, err
 }
 
+// Connection models a USBTMC connection.
 type Connection struct {
 	ctx *usbtmc.Context
 	dev *usbtmc.Device
 }
 
+// Read implements the Reader interface for Connection.
 func (c *Connection) Read(p []byte) (n int, err error) {
 	return c.dev.Read(p)
 }
 
+// Write implements the Writer interface for Connection.
 func (c *Connection) Write(p []byte) (n int, err error) {
 	return c.dev.Write(p)
 }
 
+// Close closes the USBTMC connection.
 func (c *Connection) Close() error {
 	err := c.dev.Close()
 	if err != nil {
@@ -43,10 +48,13 @@ func (c *Connection) Close() error {
 	return c.ctx.Close()
 }
 
+// WriteString implements the StringWriter interface for Connection.
 func (c *Connection) WriteString(s string) (int, error) {
 	return c.dev.WriteString(s)
 }
 
+// Query writes the given string to the connected resource and then reads the
+// return value from the VISA connection.
 func (c *Connection) Query(s string) (value string, err error) {
 	return c.dev.Query(s)
 }

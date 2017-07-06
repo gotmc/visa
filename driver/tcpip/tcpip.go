@@ -12,12 +12,13 @@ import (
 	"github.com/gotmc/visa"
 )
 
-// tcpipDriver implements the ivi.Driver interface.
+// Driver implements the ivi.Driver interface for a TCPIP HW interface driver.
 type Driver struct{}
 
+// Open takes a VISA address string and returns a VISA resource.
 func (d Driver) Open(address string) (visa.Resource, error) {
 	var c Connection
-	tcpAddress, err := getTcpAddress(address)
+	tcpAddress, err := getTCPAddress(address)
 	if err != nil {
 		return nil, fmt.Errorf("%s is not a TCPIP VISA resource address: %s", address, err)
 	}
@@ -28,31 +29,37 @@ func (d Driver) Open(address string) (visa.Resource, error) {
 	return &c, nil
 }
 
+// Connection models a network connection.
 type Connection struct {
 	conn net.Conn
 }
 
+// Read implements the reader interface for Connection.
 func (c *Connection) Read(p []byte) (n int, err error) {
 	return 0, nil
 }
 
+// Write implements the writer interface for Connection.
 func (c *Connection) Write(p []byte) (n int, err error) {
 	return 0, nil
 }
 
+// Close implements the closer interface for Connection.
 func (c *Connection) Close() error {
 	return c.conn.Close()
 }
 
+// WriteString implements the StringWriter interface for Connection.
 func (c *Connection) WriteString(s string) (int, error) {
 	return 0, nil
 }
 
+// Query implements the Querier interface for Connection.
 func (c *Connection) Query(s string) (value string, err error) {
 	return "foo", nil
 }
 
-func getTcpAddress(address string) (string, error) {
+func getTCPAddress(address string) (string, error) {
 	return "127.0.0.1:5025", nil
 }
 

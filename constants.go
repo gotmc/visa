@@ -5,8 +5,11 @@
 
 package visa
 
+// InterfaceType identifies the type of the HW interface: USBTMC, TCPIP, or
+// ASRL (serial).
 type InterfaceType int
 
+// The available HW interface types for the VISA resource.
 const (
 	USBTMC InterfaceType = iota
 	TCPIP
@@ -19,6 +22,7 @@ var interfaceDescription = map[InterfaceType]string{
 	ASRL:   "Serial",
 }
 
+// String implements the Stringer interface for the InterfaceType.
 func (i InterfaceType) String() string {
 	return interfaceDescription[i]
 }
