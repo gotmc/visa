@@ -1,5 +1,5 @@
 // Project site: https://github.com/gotmc/visa
-// Copyright (c) 2017 The visa developers. All rights reserved.
+// Copyright (c) 2017-2020 The visa developers. All rights reserved.
 // Use of this source code is governed by a MIT-style license that
 // can be found in the LICENSE.txt file for the project.
 
