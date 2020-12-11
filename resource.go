@@ -42,7 +42,7 @@ type Resource interface {
 func NewResource(address string) (Resource, error) {
 	interfaceType, err := determineInterfaceType(address)
 	if err != nil {
-		return nil, fmt.Errorf("interface type unidentifiable in address %s", address)
+		return nil, err
 	}
 	driver, exists := drivers[interfaceType]
 	if !exists {

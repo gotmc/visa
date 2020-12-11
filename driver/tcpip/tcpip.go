@@ -17,3 +17,9 @@ type Driver struct{}
 func (d Driver) Open(address string) (visa.Resource, error) {
 	return lxi.NewDevice(address)
 }
+
+// init registers the driver with the program.
+func init() {
+	var driver Driver
+	visa.Register(visa.TCPIP, driver)
+}

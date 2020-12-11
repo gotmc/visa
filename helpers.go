@@ -28,6 +28,6 @@ func determineInterfaceType(address string) (InterfaceType, error) {
 	case "TCPIP":
 		return TCPIP, nil
 	default:
-		return ASRL, fmt.Errorf("invalid VISA interface type %s", interfaceType)
+		return ASRL, fmt.Errorf("interface type unidentifiable in address %s", address)
 	}
 }

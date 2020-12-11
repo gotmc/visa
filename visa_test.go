@@ -118,7 +118,7 @@ func TestParsingBadVisaResourceStrings(t *testing.T) {
 	}{
 		{
 			"UBS::1234::5678::INSTR",
-			errors.New("Interface type not supported"),
+			errors.New("interface type unidentifiable in address UBS::1234::5678::INSTR"),
 		},
 		{
 			"USB::1234::5678::INTSR",
