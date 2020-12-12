@@ -122,7 +122,7 @@ func TestParsingBadVisaResourceStrings(t *testing.T) {
 		},
 		{
 			"USB::1234::5678::INTSR",
-			errors.New("visa: resource class was not instr"),
+			errors.New("unregistered interface: USBTMC"),
 		},
 	}
 	for _, testCase := range testCases {

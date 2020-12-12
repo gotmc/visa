@@ -1,7 +1,6 @@
 # visa
 
-Go-based Virtual Instrument Software Architecture (VISA) resource
-manager.
+Go-based Virtual Instrument Software Architecture (VISA) resource manager.
 
 [![GoDoc][godoc badge]][godoc link]
 [![Go Report Card][report badge]][report card]
@@ -23,8 +22,8 @@ webpage][ivi-specs].
 ## Usage
 
 In order to not bloat an end developer's application, the desired HW interface
-drivers have to be registered, similar to Go's SQL package. Currently,
-there are TCPIP and USBTMC drivers available.
+driver(s) have to be registered, similar to Go's SQL package. Currently, there
+are TCPIP and USBTMC drivers available.
 
 ```go
 "github.com/gotmc/visa"

@@ -27,6 +27,8 @@ func determineInterfaceType(address string) (InterfaceType, error) {
 		return USBTMC, nil
 	case "TCPIP":
 		return TCPIP, nil
+	case "ASRL":
+		return ASRL, nil
 	default:
 		return ASRL, fmt.Errorf("interface type unidentifiable in address %s", address)
 	}
