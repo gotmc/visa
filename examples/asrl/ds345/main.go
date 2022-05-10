@@ -7,26 +7,22 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"time"
 
-	_ "github.com/gotmc/usbtmc/driver/google"
 	"github.com/gotmc/visa"
-	_ "github.com/gotmc/visa/driver/usbtmc"
+	_ "github.com/gotmc/visa/driver/asrl"
 )
 
-// Can use either a USBTMC or TCP/IP socker to communicate with the function
-// generator. Below are two different VISA address strings.
 const (
-	usbAddress string = "USB0::2391::1031::MY44035349::INSTR"
+	address string = "ASRL::/dev/tty.usbserial-PX484GRU::9600::8N2::INSTR"
 )
 
 func main() {
 
 	// Create new VISA resource
 	start := time.Now()
-	fg, err := visa.NewResource(usbAddress)
+	fg, err := visa.NewResource(address)
 	if err != nil {
 		log.Fatal("Couldn't open the resource for the function generator")
 	}
@@ -34,12 +30,6 @@ func main() {
 
 	// Configure function generator
 	fg.WriteString("*CLS\n")
-	fg.WriteString("burst:state off\n")
-	fg.Write([]byte("apply:sinusoid 2340, 0.1, 0.0\n")) // Write using byte slice
-	io.WriteString(fg, "burst:internal:period 0.112\n") // WriteString using io's Writer interface
-	fg.WriteString("burst:internal:period 0.112\n")     // WriteString
-	fg.WriteString("burst:ncycles 131\n")
-	fg.WriteString("burst:state on\n")
 
 	// Query using the query method
 	queries := []string{"volt", "freq", "volt:offs", "volt:unit"}
