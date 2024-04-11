@@ -53,6 +53,15 @@ func (c *Connection) WriteString(s string) (int, error) {
 	return c.dev.WriteString(s)
 }
 
+// Command implements the StringWriter interface for Connection.
+
+func (c *Connection) Command(format string, a ...interface{}) error {
+	if a == nil {
+		return c.dev.Command(format)
+	}
+	return c.dev.Command(format, a...)
+}
+
 // Query writes the given string to the connected resource and then reads the
 // return value from the VISA connection.
 func (c *Connection) Query(s string) (value string, err error) {

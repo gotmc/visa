@@ -35,6 +35,7 @@ type Resource interface {
 	Read(p []byte) (n int, err error)
 	Write(p []byte) (n int, err error)
 	WriteString(s string) (n int, err error)
+	Command(format string, a ...any) error
 	Query(s string) (value string, err error)
 }
 

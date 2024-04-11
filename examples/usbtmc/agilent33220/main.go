@@ -16,7 +16,7 @@ import (
 	_ "github.com/gotmc/visa/driver/usbtmc"
 )
 
-// Can use either a USBTMC or TCP/IP socker to communicate with the function
+// Can use either a USBTMC or TCP/IP socket to communicate with the function
 // generator. Below are two different VISA address strings.
 const (
 	usbAddress string = "USB0::2391::1031::MY44035349::INSTR"
