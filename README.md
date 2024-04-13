@@ -1,6 +1,9 @@
 # visa
 
-Go-based Virtual Instrument Software Architecture (VISA) resource manager.
+Go-based Virtual Instrument Software Architecture (VISA) resource manager, which
+can be used by itself to send Standard Commands for Programmable Instruments
+([SCPI][]) commands, or to provide an interface for Interchangeable Virtual
+Instrument (IVI) drivers.
 
 [![GoDoc][godoc badge]][godoc link]
 [![Go Report Card][report badge]][report card]
@@ -15,7 +18,7 @@ interface type, application developers can decide which interface types
 to support and which to exclude, so as to not unnecessarily bloat their
 packages.
 
-The primary source of information is the *VPP-4.3: The VISA Library*
+The primary source of information is the _VPP-4.3: The VISA Library_
 dated June 19, 2014, which can be found at the [IVI Specifications
 webpage][ivi-specs].
 
@@ -44,7 +47,7 @@ Documentation can be found at either:
 
 - <https://godoc.org/github.com/gotmc/visa>
 - <http://localhost:6060/pkg/github.com/gotmc/visa/> after running `$
-  godoc -http=:6060`
+godoc -http=:6060`
 
 ## Contributing
 
@@ -84,4 +87,5 @@ $ make cover
 [pull request]: https://help.github.com/articles/using-pull-requests
 [report badge]: https://goreportcard.com/badge/github.com/gotmc/visa
 [report card]: https://goreportcard.com/report/github.com/gotmc/visa
+[scpi]: https://www.ivifoundation.org/About-IVI/scpi.html
 [visa]: https://github.com/gotmc/visa
