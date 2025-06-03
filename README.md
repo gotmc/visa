@@ -30,9 +30,9 @@ are TCPIP, USBTMC, and Serial (ASRL) drivers available.
 
 ```go
 "github.com/gotmc/visa"
-_ "github.com/gotmc/visa/drivers/tcpip"
-_ "github.com/gotmc/visa/drivers/usbtmc"
-_ "github.com/gotmc/visa/drivers/asrl"
+_ "github.com/gotmc/visa/driver/tcpip"
+_ "github.com/gotmc/visa/driver/usbtmc"
+_ "github.com/gotmc/visa/driver/asrl"
 ```
 
 ## Installation
