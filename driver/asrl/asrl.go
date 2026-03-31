@@ -6,16 +6,61 @@
 package asrl
 
 import (
+	"context"
+
 	"github.com/gotmc/asrl"
 	"github.com/gotmc/visa"
 )
 
-// Driver implements the visa.Driver interface for a TCPIP HW interface driver.
+// Driver implements the visa.Driver interface for a serial HW interface driver.
 type Driver struct{}
 
 // Open takes a VISA address string and returns a VISA resource.
 func (d Driver) Open(address string) (visa.Resource, error) {
-	return asrl.NewDevice(address)
+	dev, err := asrl.NewDevice(address)
+	if err != nil {
+		return nil, err
+	}
+	return &Connection{dev: dev}, nil
+}
+
+// Connection wraps an asrl.Device to implement the visa.Resource interface.
+type Connection struct {
+	dev *asrl.Device
+}
+
+// Close closes the serial connection.
+func (c *Connection) Close() error {
+	return c.dev.Close()
+}
+
+// Read implements the Reader interface for Connection.
+func (c *Connection) Read(p []byte) (n int, err error) {
+	return c.dev.Read(p)
+}
+
+// Write implements the Writer interface for Connection.
+func (c *Connection) Write(p []byte) (n int, err error) {
+	return c.dev.Write(p)
+}
+
+// WriteString implements the StringWriter interface for Connection.
+func (c *Connection) WriteString(s string) (int, error) {
+	return c.dev.WriteString(s)
+}
+
+// Command sends a formatted SCPI command to the connected resource.
+func (c *Connection) Command(ctx context.Context, format string, a ...any) error {
+	if a == nil {
+		return c.dev.Command(format)
+	}
+	return c.dev.Command(format, a...)
+}
+
+// Query writes the given string to the connected resource and then reads the
+// return value from the VISA connection.
+func (c *Connection) Query(ctx context.Context, s string) (string, error) {
+	return c.dev.Query(s)
 }
 
 // init registers the driver with the program.

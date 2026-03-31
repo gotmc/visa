@@ -6,6 +6,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -53,9 +54,10 @@ func main() {
 }
 
 func queryRange(fg visa.Resource, r []string) {
+	ctx := context.Background()
 	for _, q := range r {
 		ws := fmt.Sprintf("%s?\n", q)
-		s, err := fg.Query(ws)
+		s, err := fg.Query(ctx, ws)
 		if err != nil {
 			log.Printf("Error reading: %v", err)
 		} else {

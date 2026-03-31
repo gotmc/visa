@@ -6,6 +6,8 @@
 package usbtmc
 
 import (
+	"context"
+
 	"github.com/gotmc/usbtmc"
 	"github.com/gotmc/visa"
 )
@@ -53,9 +55,8 @@ func (c *Connection) WriteString(s string) (int, error) {
 	return c.dev.WriteString(s)
 }
 
-// Command implements the StringWriter interface for Connection.
-
-func (c *Connection) Command(format string, a ...interface{}) error {
+// Command sends a formatted SCPI command to the connected resource.
+func (c *Connection) Command(ctx context.Context, format string, a ...any) error {
 	if a == nil {
 		return c.dev.Command(format)
 	}
@@ -64,7 +65,7 @@ func (c *Connection) Command(format string, a ...interface{}) error {
 
 // Query writes the given string to the connected resource and then reads the
 // return value from the VISA connection.
-func (c *Connection) Query(s string) (value string, err error) {
+func (c *Connection) Query(ctx context.Context, s string) (value string, err error) {
 	return c.dev.Query(s)
 }
 

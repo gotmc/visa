@@ -6,6 +6,7 @@
 package visa
 
 import (
+	"context"
 	"fmt"
 	"log"
 )
@@ -35,8 +36,8 @@ type Resource interface {
 	Read(p []byte) (n int, err error)
 	Write(p []byte) (n int, err error)
 	WriteString(s string) (n int, err error)
-	Command(format string, a ...any) error
-	Query(s string) (value string, err error)
+	Command(ctx context.Context, format string, a ...any) error
+	Query(ctx context.Context, s string) (value string, err error)
 }
 
 // NewResource creates a new Resource using the given VISA address.
