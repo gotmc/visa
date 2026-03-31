@@ -26,19 +26,13 @@ webpage][ivi-specs].
 
 In order to not bloat an end developer's application, the desired HW interface
 driver(s) have to be registered, similar to Go's SQL package. Currently, there
-are TCPIP, USBTMC, and Serial (ASRL) drivers available.
+are TCPIP (LXI), USBTMC, and Serial (ASRL) drivers available.
 
 ```go
 "github.com/gotmc/visa"
 _ "github.com/gotmc/visa/driver/tcpip"
 _ "github.com/gotmc/visa/driver/usbtmc"
 _ "github.com/gotmc/visa/driver/asrl"
-```
-
-## Installation
-
-```bash
-$ go get github.com/gotmc/visa
 ```
 
 ## Documentation

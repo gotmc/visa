@@ -7,6 +7,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -17,18 +18,24 @@ import (
 	_ "github.com/gotmc/visa/driver/usbtmc"
 )
 
-// Can use either a USBTMC or TCP/IP socket to communicate with the function
-// generator. Below are two different VISA address strings.
-const (
-	usbAddress string = "USB0::2391::1031::MY44035349::INSTR"
-)
-
 func main() {
+
+	// Get the serial number for the Keyight 33220A from CLI flag.
+	var sn string
+	flag.StringVar(
+		&sn,
+		"sn",
+		"MY44035349",
+		"Serial number of Keysight 33220A",
+	)
+	flag.Parse()
 
 	// Create new VISA resource
 	start := time.Now()
 	ctx := context.Background()
-	fg, err := visa.NewResource(ctx, usbAddress)
+	address := fmt.Sprintf("USB0::2391::1031::%s::INSTR", sn)
+	log.Printf("Using VISA address: %s", address)
+	fg, err := visa.NewResource(ctx, address)
 	if err != nil {
 		log.Fatal("Couldn't open the resource for the function generator")
 	}

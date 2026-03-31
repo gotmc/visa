@@ -9,29 +9,30 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"time"
 
 	"github.com/gotmc/visa"
-	_ "github.com/gotmc/visa/driver/asrl"
+	_ "github.com/gotmc/visa/driver/tcpip"
 )
 
 func main() {
 
-	// Get serial port from CLI flag.
-	var ser string
+	// Get IP address from CLI flag.
+	var ip string
 	flag.StringVar(
-		&ser,
-		"ser",
-		"/dev/tty.usbserial-PX484GRU",
-		"Serial port for SRS DS345",
+		&ip,
+		"ip",
+		"192.168.1.100",
+		"IP address of Keysight 33220A",
 	)
 	flag.Parse()
 
 	// Create new VISA resource
 	start := time.Now()
 	ctx := context.Background()
-	address := fmt.Sprintf("ASRL::%s::9600::8N2::INSTR", ser)
+	address := fmt.Sprintf("TCPIP0::%s::5025::SOCKET", ip)
 	log.Printf("Using VISA address: %s", address)
 	fg, err := visa.NewResource(ctx, address)
 	if err != nil {
@@ -41,12 +42,18 @@ func main() {
 
 	// Configure function generator
 	fg.WriteString("*CLS\n")
+	fg.WriteString("burst:state off\n")
+	fg.Write([]byte("apply:sinusoid 2340, 0.1, 0.0\n")) // Write using byte slice
+	io.WriteString(fg, "burst:internal:period 0.112\n") // WriteString using io's Writer interface
+	fg.WriteString("burst:internal:period 0.112\n")     // WriteString
+	fg.WriteString("burst:ncycles 131\n")
+	fg.WriteString("burst:state on\n")
 
 	// Query using the query method
 	queries := []string{"volt", "freq", "volt:offs", "volt:unit"}
 	queryRange(fg, queries)
 
-	// Close the function generator and and check for errors.
+	// Close the function generator and LXI context and check for errors.
 	err = fg.Close()
 	if err != nil {
 		log.Printf("error closing fg: %s", err)

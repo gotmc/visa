@@ -61,3 +61,30 @@ updateall:
 tidy:
   go mod tidy
   go mod verify
+
+# Build and run the LXI Keysight 33220A example application.
+[group('examples')]
+k33220lxi ip:
+  #!/usr/bin/env bash
+  echo '# VISA LXI Keysight 33220A Example Application'
+  cd {{justfile_directory()}}/examples/lxi/key33220
+  env go build -o key33220
+  ./key33220 -ip={{ip}}
+
+# Build and run the USBTMC Keysight 33220A example application.
+[group('examples')]
+k33220usb sn:
+  #!/usr/bin/env bash
+  echo '# VISA USBTMC Keysight 33220A Example Application'
+  cd {{justfile_directory()}}/examples/usbtmc/key33220
+  env go build -o key33220
+  ./key33220 -sn={{sn}}
+
+# Build and run the ASRL SRS DS345 example application.
+[group('examples')]
+ds345 ip:
+  #!/usr/bin/env bash
+  echo '# VISA ASRL SRS DS345 Example Application'
+  cd {{justfile_directory()}}/examples/asrl/ds345
+  env go build -o ds345
+  ./ds345 -ip={{ip}}
