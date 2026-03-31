@@ -11,12 +11,13 @@ import (
 	"strings"
 )
 
+var addressRe = regexp.MustCompile(
+	`^(?P<interfaceType>[A-Za-z]+)(?P<boardIndex>\d*)::(?P<allElse>.*)$`,
+)
+
 func determineInterfaceType(address string) (InterfaceType, error) {
-	regexString := `^(?P<interfaceType>[A-Za-z]+)(?P<boardIndex>\d*)::` +
-		`(?P<allElse>.*)$`
-	re := regexp.MustCompile(regexString)
-	res := re.FindStringSubmatch(address)
-	subexpNames := re.SubexpNames()
+	res := addressRe.FindStringSubmatch(address)
+	subexpNames := addressRe.SubexpNames()
 	matchMap := map[string]string{}
 	for i, n := range res {
 		matchMap[subexpNames[i]] = string(n)
