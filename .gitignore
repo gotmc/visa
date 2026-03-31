@@ -1,6 +1,7 @@
 examples/usbtmc/agilent33220/agilent33220
 examples/usbtmc/key33220/key33220
 examples/lxi/key33220/key33220
+examples/tcpip/key33220/key33220
 examples/asrl/ds345/ds345
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)

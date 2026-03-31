@@ -62,12 +62,12 @@ tidy:
   go mod tidy
   go mod verify
 
-# Build and run the LXI Keysight 33220A example application.
+# Build and run the TCPIP Keysight 33220A example application.
 [group('examples')]
-k33220lxi ip:
+k33220tcp ip:
   #!/usr/bin/env bash
-  echo '# VISA LXI Keysight 33220A Example Application'
-  cd {{justfile_directory()}}/examples/lxi/key33220
+  echo '# VISA TCPIP Keysight 33220A Example Application'
+  cd {{justfile_directory()}}/examples/tcpip/key33220
   env go build -o key33220
   ./key33220 -ip={{ip}}
 
@@ -82,9 +82,9 @@ k33220usb sn:
 
 # Build and run the ASRL SRS DS345 example application.
 [group('examples')]
-ds345 ip:
+ds345 port:
   #!/usr/bin/env bash
   echo '# VISA ASRL SRS DS345 Example Application'
   cd {{justfile_directory()}}/examples/asrl/ds345
   env go build -o ds345
-  ./ds345 -ip={{ip}}
+  ./ds345 -ser={{port}}

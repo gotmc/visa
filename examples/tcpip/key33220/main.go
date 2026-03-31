@@ -63,7 +63,7 @@ func main() {
 func queryRange(fg visa.Resource, r []string) {
 	ctx := context.Background()
 	for _, q := range r {
-		ws := fmt.Sprintf("%s?\n", q)
+		ws := fmt.Sprintf("%s?", q)
 		s, err := fg.Query(ctx, ws)
 		if err != nil {
 			log.Printf("Error reading: %v", err)
