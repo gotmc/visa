@@ -17,7 +17,7 @@ type Driver struct{}
 
 // Open takes a VISA address string and returns a VISA resource.
 func (d Driver) Open(address string) (visa.Resource, error) {
-	dev, err := lxi.NewDevice(address)
+	dev, err := lxi.NewDevice(context.Background(), address)
 	if err != nil {
 		return nil, err
 	}
@@ -51,16 +51,13 @@ func (c *Connection) WriteString(s string) (int, error) {
 
 // Command sends a formatted SCPI command to the connected resource.
 func (c *Connection) Command(ctx context.Context, format string, a ...any) error {
-	if a == nil {
-		return c.dev.Command(format)
-	}
-	return c.dev.Command(format, a...)
+	return c.dev.Command(ctx, format, a...)
 }
 
 // Query writes the given string to the connected resource and then reads the
 // return value from the VISA connection.
 func (c *Connection) Query(ctx context.Context, s string) (string, error) {
-	return c.dev.Query(s)
+	return c.dev.Query(ctx, s)
 }
 
 // init registers the driver with the program.

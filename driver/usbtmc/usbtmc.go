@@ -57,9 +57,6 @@ func (c *Connection) WriteString(s string) (int, error) {
 
 // Command sends a formatted SCPI command to the connected resource.
 func (c *Connection) Command(ctx context.Context, format string, a ...any) error {
-	if a == nil {
-		return c.dev.Command(format)
-	}
 	return c.dev.Command(format, a...)
 }
 

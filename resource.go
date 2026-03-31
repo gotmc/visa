@@ -3,6 +3,12 @@
 // Use of this source code is governed by a MIT-style license that
 // can be found in the LICENSE.txt file for the project.
 
+// Package visa implements a Virtual Instrument Software Architecture (VISA)
+// resource manager for sending Standard Commands for Programmable Instruments
+// (SCPI) commands or providing an interface for Interchangeable Virtual
+// Instrument (IVI) drivers. It parses VISA resource address strings to create
+// resources that abstract the hardware interface type (USBTMC, TCPIP, ASRL),
+// using a driver registration model similar to database/sql.
 package visa
 
 import (
