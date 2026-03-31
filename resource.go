@@ -54,7 +54,7 @@ func NewResource(ctx context.Context, address string) (Resource, error) {
 	}
 	driver, exists := drivers[interfaceType]
 	if !exists {
-		return nil, fmt.Errorf("unregistered interface: %s", interfaceType)
+		return nil, fmt.Errorf("%w: %s", ErrDriverNotRegistered, interfaceType)
 	}
 	return driver.Open(ctx, address)
 }
