@@ -18,11 +18,16 @@ type Driver struct {
 
 // Open opens a VISA resource given a VISA address string.
 func (d Driver) Open(_ context.Context, address string) (visa.Resource, error) {
-	var c Connection
-	c.ctx, _ = usbtmc.NewContext()
-	dev, err := c.ctx.NewDevice(address)
-	c.dev = dev
-	return &c, err
+	ctx, err := usbtmc.NewContext()
+	if err != nil {
+		return nil, err
+	}
+	dev, err := ctx.NewDevice(address)
+	if err != nil {
+		ctx.Close()
+		return nil, err
+	}
+	return &Connection{ctx: ctx, dev: dev}, nil
 }
 
 // Connection models a USBTMC connection.

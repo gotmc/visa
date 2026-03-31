@@ -18,7 +18,7 @@ just cover all      # HTML coverage for all tests
 go test -run TestName ./...  # run a single test
 ```
 
-Prefer `just` over the `Makefile` (Makefile is outdated).
+Prefer `just` (no Makefile in this repo).
 
 ## Architecture
 
@@ -32,10 +32,10 @@ import (
 ```
 
 **Key interfaces:**
-- `Driver` — has `Open(address string) (Resource, error)`, implemented by each driver package
+- `Driver` — has `Open(ctx, address) (Resource, error)`, implemented by each driver package
 - `Resource` — `io.ReadWriteCloser` + `WriteString`, `Command(ctx, format, a...)`, `Query(ctx, s)`
 
-**Core flow:** `visa.NewResource(address)` -> `determineInterfaceType()` parses the address prefix (USB/TCPIP/ASRL) -> looks up registered driver -> calls `driver.Open()`.
+**Core flow:** `visa.NewResource(ctx, address)` -> `determineInterfaceType()` parses the address prefix (USB/TCPIP/ASRL) -> looks up registered driver -> calls `driver.Open(ctx, address)`.
 
 **Drivers** (`driver/` subdirectories) are thin `Connection` wrappers delegating to external libraries:
 - `tcpip` -> `github.com/gotmc/lxi`
