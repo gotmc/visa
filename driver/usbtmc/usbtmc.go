@@ -17,7 +17,7 @@ type Driver struct {
 }
 
 // Open opens a VISA resource given a VISA address string.
-func (d Driver) Open(address string) (visa.Resource, error) {
+func (d Driver) Open(_ context.Context, address string) (visa.Resource, error) {
 	var c Connection
 	c.ctx, _ = usbtmc.NewContext()
 	dev, err := c.ctx.NewDevice(address)

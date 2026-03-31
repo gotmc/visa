@@ -20,10 +20,10 @@ import (
 // A map of registered matchers for searching.
 var drivers = make(map[InterfaceType]Driver)
 
-// Driver defines the behavior required by types that want
-// to implement a new search type.
+// Driver defines the behavior required by types that want to implement a new
+// search type.
 type Driver interface {
-	Open(address string) (Resource, error)
+	Open(ctx context.Context, address string) (Resource, error)
 }
 
 // Register is called to register a driver for use by the program.
@@ -47,7 +47,7 @@ type Resource interface {
 }
 
 // NewResource creates a new Resource using the given VISA address.
-func NewResource(address string) (Resource, error) {
+func NewResource(ctx context.Context, address string) (Resource, error) {
 	interfaceType, err := determineInterfaceType(address)
 	if err != nil {
 		return nil, err
@@ -56,5 +56,5 @@ func NewResource(address string) (Resource, error) {
 	if !exists {
 		return nil, fmt.Errorf("unregistered interface: %s", interfaceType)
 	}
-	return driver.Open(address)
+	return driver.Open(ctx, address)
 }

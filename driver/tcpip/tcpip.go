@@ -16,8 +16,8 @@ import (
 type Driver struct{}
 
 // Open takes a VISA address string and returns a VISA resource.
-func (d Driver) Open(address string) (visa.Resource, error) {
-	dev, err := lxi.NewDevice(context.Background(), address)
+func (d Driver) Open(ctx context.Context, address string) (visa.Resource, error) {
+	dev, err := lxi.NewDevice(ctx, address)
 	if err != nil {
 		return nil, err
 	}

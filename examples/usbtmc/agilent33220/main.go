@@ -27,7 +27,8 @@ func main() {
 
 	// Create new VISA resource
 	start := time.Now()
-	fg, err := visa.NewResource(usbAddress)
+	ctx := context.Background()
+	fg, err := visa.NewResource(ctx, usbAddress)
 	if err != nil {
 		log.Fatal("Couldn't open the resource for the function generator")
 	}
