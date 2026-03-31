@@ -11,15 +11,17 @@ type InterfaceType int
 
 // The available HW interface types for the VISA resource.
 const (
-	USBTMC InterfaceType = iota
+	UNKNOWN InterfaceType = iota - 1
+	USBTMC
 	TCPIP
 	ASRL
 )
 
 var interfaceDescription = map[InterfaceType]string{
-	USBTMC: "USBTMC",
-	TCPIP:  "TCP-IP",
-	ASRL:   "Serial",
+	UNKNOWN: "Unknown",
+	USBTMC:  "USBTMC",
+	TCPIP:   "TCP-IP",
+	ASRL:    "Serial",
 }
 
 // String implements the Stringer interface for the InterfaceType.

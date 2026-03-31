@@ -17,6 +17,9 @@ var addressRe = regexp.MustCompile(
 
 func determineInterfaceType(address string) (InterfaceType, error) {
 	res := addressRe.FindStringSubmatch(address)
+	if res == nil {
+		return UNKNOWN, fmt.Errorf("address %q does not match VISA format", address)
+	}
 	subexpNames := addressRe.SubexpNames()
 	matchMap := map[string]string{}
 	for i, n := range res {
@@ -31,6 +34,10 @@ func determineInterfaceType(address string) (InterfaceType, error) {
 	case "ASRL":
 		return ASRL, nil
 	default:
-		return ASRL, fmt.Errorf("interface type unidentifiable in address %s", address)
+		return UNKNOWN, fmt.Errorf(
+			"unknown interface type %q in address %q",
+			interfaceType,
+			address,
+		)
 	}
 }
