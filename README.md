@@ -58,19 +58,23 @@ Contributions are welcome! To contribute please:
 3. Code
 4. Submit a [pull request][]
 
+### Development Dependencies
+
+- [just][] - task runner that replaces [GNU Make][make]
+
 ### Testing
 
 Prior to submitting a [pull request][], please run:
 
 ```bash
-$ make check
-$ make lint
+$ just check
+$ just lint
 ```
 
 To update and view the test coverage report:
 
 ```bash
-$ make cover
+$ just cover
 ```
 
 ## License
@@ -82,8 +86,10 @@ $ make cover
 [godoc badge]: https://godoc.org/github.com/gotmc/visa?status.svg
 [godoc link]: https://godoc.org/github.com/gotmc/visa
 [ivi-specs]: http://www.ivifoundation.org/specifications/
+[just]: https://just.systems/man/en/
 [LICENSE.txt]: https://github.com/gotmc/visa/blob/master/LICENSE.txt
 [license badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[make]: https://www.gnu.org/software/make/
 [pull request]: https://help.github.com/articles/using-pull-requests
 [report badge]: https://goreportcard.com/badge/github.com/gotmc/visa
 [report card]: https://goreportcard.com/report/github.com/gotmc/visa
