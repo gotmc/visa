@@ -59,24 +59,24 @@ type Connection struct {
 
 // Read implements the Reader interface for Connection.
 func (c *Connection) Read(p []byte) (n int, err error) {
-	return c.dev.Read(context.Background(), p)
+	return c.dev.Read(p)
 }
 
 // ReadContext reads from the USBTMC connection with context support for
 // cancellation and deadlines.
 func (c *Connection) ReadContext(ctx context.Context, p []byte) (int, error) {
-	return c.dev.Read(ctx, p)
+	return c.dev.ReadContext(ctx, p)
 }
 
 // Write implements the Writer interface for Connection.
 func (c *Connection) Write(p []byte) (n int, err error) {
-	return c.dev.Write(context.Background(), p)
+	return c.dev.Write(p)
 }
 
 // WriteContext writes to the USBTMC connection with context support for
 // cancellation and deadlines.
 func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
-	return c.dev.Write(ctx, p)
+	return c.dev.WriteContext(ctx, p)
 }
 
 // Close closes the USBTMC connection.
@@ -91,7 +91,7 @@ func (c *Connection) Close() error {
 
 // WriteString implements the StringWriter interface for Connection.
 func (c *Connection) WriteString(s string) (int, error) {
-	return c.dev.WriteString(context.Background(), s)
+	return c.dev.WriteString(s)
 }
 
 // Command sends a formatted SCPI command to the connected resource.
