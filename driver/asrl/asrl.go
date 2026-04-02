@@ -3,6 +3,8 @@
 // Use of this source code is governed by a MIT-style license that
 // can be found in the LICENSE.txt file for the project.
 
+// Package asrl implements a VISA driver for serial (ASRL) connected
+// instruments.
 package asrl
 
 import (
@@ -47,6 +49,38 @@ func (c *Connection) Write(p []byte) (n int, err error) {
 // WriteString implements the StringWriter interface for Connection.
 func (c *Connection) WriteString(s string) (int, error) {
 	return c.dev.WriteString(s)
+}
+
+// ReadContext reads from the serial connection with context support for
+// cancellation and deadlines.
+func (c *Connection) ReadContext(ctx context.Context, p []byte) (n int, err error) {
+	done := make(chan struct{})
+	go func() {
+		n, err = c.dev.Read(p)
+		close(done)
+	}()
+	select {
+	case <-ctx.Done():
+		return 0, ctx.Err()
+	case <-done:
+		return n, err
+	}
+}
+
+// WriteContext writes to the serial connection with context support for
+// cancellation and deadlines.
+func (c *Connection) WriteContext(ctx context.Context, p []byte) (n int, err error) {
+	done := make(chan struct{})
+	go func() {
+		n, err = c.dev.Write(p)
+		close(done)
+	}()
+	select {
+	case <-ctx.Done():
+		return 0, ctx.Err()
+	case <-done:
+		return n, err
+	}
 }
 
 // Command sends a formatted SCPI command to the connected resource.

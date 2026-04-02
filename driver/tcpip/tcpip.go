@@ -3,6 +3,8 @@
 // Use of this source code is governed by a MIT-style license that
 // can be found in the LICENSE.txt file for the project.
 
+// Package tcpip implements a VISA driver for TCP/IP connected instruments
+// using the LXI protocol.
 package tcpip
 
 import (
@@ -39,9 +41,41 @@ func (c *Connection) Read(p []byte) (n int, err error) {
 	return c.dev.Read(p)
 }
 
+// ReadContext reads from the TCPIP connection with context support for
+// cancellation and deadlines.
+func (c *Connection) ReadContext(ctx context.Context, p []byte) (n int, err error) {
+	done := make(chan struct{})
+	go func() {
+		n, err = c.dev.Read(p)
+		close(done)
+	}()
+	select {
+	case <-ctx.Done():
+		return 0, ctx.Err()
+	case <-done:
+		return n, err
+	}
+}
+
 // Write implements the Writer interface for Connection.
 func (c *Connection) Write(p []byte) (n int, err error) {
 	return c.dev.Write(p)
+}
+
+// WriteContext writes to the TCPIP connection with context support for
+// cancellation and deadlines.
+func (c *Connection) WriteContext(ctx context.Context, p []byte) (n int, err error) {
+	done := make(chan struct{})
+	go func() {
+		n, err = c.dev.Write(p)
+		close(done)
+	}()
+	select {
+	case <-ctx.Done():
+		return 0, ctx.Err()
+	case <-done:
+		return n, err
+	}
 }
 
 // WriteString implements the StringWriter interface for Connection.

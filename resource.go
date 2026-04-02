@@ -3,12 +3,6 @@
 // Use of this source code is governed by a MIT-style license that
 // can be found in the LICENSE.txt file for the project.
 
-// Package visa implements a Virtual Instrument Software Architecture (VISA)
-// resource manager for sending Standard Commands for Programmable Instruments
-// (SCPI) commands or providing an interface for Interchangeable Virtual
-// Instrument (IVI) drivers. It parses VISA resource address strings to create
-// resources that abstract the hardware interface type (USBTMC, TCPIP, ASRL),
-// using a driver registration model similar to database/sql.
 package visa
 
 import (
@@ -42,8 +36,10 @@ type Resource interface {
 	Read(p []byte) (n int, err error)
 	Write(p []byte) (n int, err error)
 	WriteString(s string) (n int, err error)
-	Command(ctx context.Context, format string, a ...any) error
-	Query(ctx context.Context, s string) (value string, err error)
+	ReadContext(ctx context.Context, p []byte) (n int, err error)
+	WriteContext(ctx context.Context, p []byte) (n int, err error)
+	Command(ctx context.Context, cmd string, a ...any) error
+	Query(ctx context.Context, cmd string) (value string, err error)
 }
 
 // NewResource creates a new Resource using the given VISA address.

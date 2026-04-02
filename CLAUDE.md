@@ -18,7 +18,7 @@ just cover all      # HTML coverage for all tests
 go test -run TestName ./...  # run a single test
 ```
 
-Prefer `just` (no Makefile in this repo).
+Prefer `just` (no Makefile in this repo). Requires Go 1.25+.
 
 ## Architecture
 
@@ -43,6 +43,10 @@ import (
 - `asrl` -> `github.com/gotmc/asrl`
 
 Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface, adding `context.Context` to `Command` and `Query`.
+
+**Error handling:** Sentinel errors in `errors.go` (`ErrInvalidAddress`, `ErrUnknownInterfaceType`, `ErrDriverNotRegistered`) are wrapped with `%w` for programmatic checking via `errors.Is`.
+
+**`InterfaceType` enum:** `UNKNOWN` starts at `-1` (iota - 1), so `USBTMC=0`, `TCPIP=1`, `ASRL=2`. The VISA address regex is compiled once at package level in `helpers.go`.
 
 ## VISA Address Format
 
