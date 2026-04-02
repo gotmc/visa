@@ -92,11 +92,12 @@ func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
 
 // Close closes the USBTMC connection.
 func (c *Connection) Close() error {
-	err := c.dev.Close()
-	if err != nil {
-		return err
+	devErr := c.dev.Close()
+	ctxErr := c.ctx.Close()
+	if devErr != nil {
+		return devErr
 	}
-	return c.ctx.Close()
+	return ctxErr
 }
 
 // WriteString implements the StringWriter interface for Connection.
