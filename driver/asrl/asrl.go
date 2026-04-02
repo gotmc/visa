@@ -52,34 +52,44 @@ func (c *Connection) WriteString(s string) (int, error) {
 }
 
 // ReadContext reads from the serial connection with context support for
-// cancellation and deadlines.
-func (c *Connection) ReadContext(ctx context.Context, p []byte) (n int, err error) {
-	done := make(chan struct{})
+// cancellation and deadlines. If the context is cancelled, the underlying
+// read may still complete in the background.
+func (c *Connection) ReadContext(ctx context.Context, p []byte) (int, error) {
+	type result struct {
+		n   int
+		err error
+	}
+	ch := make(chan result, 1)
 	go func() {
-		n, err = c.dev.Read(p)
-		close(done)
+		n, err := c.dev.Read(p)
+		ch <- result{n, err}
 	}()
 	select {
 	case <-ctx.Done():
 		return 0, ctx.Err()
-	case <-done:
-		return n, err
+	case r := <-ch:
+		return r.n, r.err
 	}
 }
 
 // WriteContext writes to the serial connection with context support for
-// cancellation and deadlines.
-func (c *Connection) WriteContext(ctx context.Context, p []byte) (n int, err error) {
-	done := make(chan struct{})
+// cancellation and deadlines. If the context is cancelled, the underlying
+// write may still complete in the background.
+func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
+	type result struct {
+		n   int
+		err error
+	}
+	ch := make(chan result, 1)
 	go func() {
-		n, err = c.dev.Write(p)
-		close(done)
+		n, err := c.dev.Write(p)
+		ch <- result{n, err}
 	}()
 	select {
 	case <-ctx.Done():
 		return 0, ctx.Err()
-	case <-done:
-		return n, err
+	case r := <-ch:
+		return r.n, r.err
 	}
 }
 
