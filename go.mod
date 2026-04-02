@@ -4,8 +4,8 @@ go 1.25.0
 
 require (
 	github.com/gotmc/asrl v0.12.0
-	github.com/gotmc/lxi v0.12.0
-	github.com/gotmc/usbtmc v0.9.0
+	github.com/gotmc/lxi v0.13.0
+	github.com/gotmc/usbtmc v0.13.0
 )
 
 require (
