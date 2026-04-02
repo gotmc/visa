@@ -8,7 +8,6 @@ package visa
 import (
 	"context"
 	"fmt"
-	"log"
 )
 
 // A map of registered matchers for searching.
@@ -20,12 +19,11 @@ type Driver interface {
 	Open(ctx context.Context, address string) (Resource, error)
 }
 
-// Register is called to register a driver for use by the program.
+// Register is called to register a driver for use by the program. It panics
+// if a driver is already registered for the given interface type.
 func Register(interfaceType InterfaceType, driver Driver) {
 	if _, exists := drivers[interfaceType]; exists {
-		// TODO(mdr): Should we log.Fatalln, or should we just re-register the
-		// newer driver?
-		log.Fatalln(interfaceType, "Driver already registered")
+		panic("visa: " + interfaceType.String() + " driver already registered")
 	}
 	drivers[interfaceType] = driver
 }
