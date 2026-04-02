@@ -42,7 +42,7 @@ import (
 - `usbtmc` -> `github.com/gotmc/usbtmc`
 - `asrl` -> `github.com/gotmc/asrl`
 
-Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface. Some upstream libraries don't natively support context, so drivers use a select/channel pattern to race calls against `ctx.Done()`.
+Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface. Most drivers delegate context directly to upstream libraries; the `usbtmc` driver still uses a select/channel goroutine pattern to race `Open()` against `ctx.Done()` because the upstream `usbtmc.NewContext`/`NewDevice` calls don't accept a context.
 
 **Error handling:** Sentinel errors in `errors.go` (`ErrInvalidAddress`, `ErrUnknownInterfaceType`, `ErrDriverNotRegistered`) are wrapped with `%w` for programmatic checking via `errors.Is`. `Register()` panics on duplicate driver registration (fail-fast by design).
 

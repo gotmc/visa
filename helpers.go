@@ -34,6 +34,8 @@ func determineInterfaceType(address string) (InterfaceType, error) {
 	case "ASRL":
 		return ASRL, nil
 	default:
-		return UNKNOWN, fmt.Errorf("%w %q in address %q", ErrUnknownInterfaceType, interfaceType, address)
+		return UNKNOWN, fmt.Errorf(
+			"%w: %q in address %q", ErrUnknownInterfaceType, interfaceType, address,
+		)
 	}
 }
