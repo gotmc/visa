@@ -8,10 +8,14 @@ package visa
 import (
 	"context"
 	"fmt"
+	"sync"
 )
 
 // A map of registered matchers for searching.
-var drivers = make(map[InterfaceType]Driver)
+var (
+	driversMu sync.RWMutex
+	drivers   = make(map[InterfaceType]Driver)
+)
 
 // Driver defines the behavior required by types that want to implement a new
 // search type.
@@ -22,6 +26,8 @@ type Driver interface {
 // Register is called to register a driver for use by the program. It panics
 // if a driver is already registered for the given interface type.
 func Register(interfaceType InterfaceType, driver Driver) {
+	driversMu.Lock()
+	defer driversMu.Unlock()
 	if _, exists := drivers[interfaceType]; exists {
 		panic("visa: " + interfaceType.String() + " driver already registered")
 	}
@@ -46,7 +52,9 @@ func NewResource(ctx context.Context, address string) (Resource, error) {
 	if err != nil {
 		return nil, err
 	}
+	driversMu.RLock()
 	driver, exists := drivers[interfaceType]
+	driversMu.RUnlock()
 	if !exists {
 		return nil, fmt.Errorf("%w: %s", ErrDriverNotRegistered, interfaceType)
 	}
