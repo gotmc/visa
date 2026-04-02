@@ -33,7 +33,7 @@ import (
 
 **Key interfaces:**
 - `Driver` — has `Open(ctx, address) (Resource, error)`, implemented by each driver package
-- `Resource` — `io.ReadWriteCloser` + `WriteString`, `Command(ctx, format, a...)`, `Query(ctx, s)`
+- `Resource` — `io.ReadWriteCloser` + `WriteString`, `ReadContext`, `WriteContext`, `Command(ctx, format, a...)`, `Query(ctx, s)`
 
 **Core flow:** `visa.NewResource(ctx, address)` -> `determineInterfaceType()` parses the address prefix (USB/TCPIP/ASRL) -> looks up registered driver -> calls `driver.Open(ctx, address)`.
 
@@ -42,9 +42,11 @@ import (
 - `usbtmc` -> `github.com/gotmc/usbtmc`
 - `asrl` -> `github.com/gotmc/asrl`
 
-Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface, adding `context.Context` to `Command` and `Query`.
+Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface. Some upstream libraries don't natively support context, so drivers use a select/channel pattern to race calls against `ctx.Done()`.
 
-**Error handling:** Sentinel errors in `errors.go` (`ErrInvalidAddress`, `ErrUnknownInterfaceType`, `ErrDriverNotRegistered`) are wrapped with `%w` for programmatic checking via `errors.Is`.
+**Error handling:** Sentinel errors in `errors.go` (`ErrInvalidAddress`, `ErrUnknownInterfaceType`, `ErrDriverNotRegistered`) are wrapped with `%w` for programmatic checking via `errors.Is`. `Register()` panics on duplicate driver registration (fail-fast by design).
+
+**Testing conventions:** Table-driven tests with `t.Run()` subtests. Tests are co-located with source files (e.g., `helpers_test.go`).
 
 **`InterfaceType` enum:** `UNKNOWN` starts at `-1` (iota - 1), so `USBTMC=0`, `TCPIP=1`, `ASRL=2`. The VISA address regex is compiled once at package level in `helpers.go`.
 
