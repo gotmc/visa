@@ -14,6 +14,8 @@ import (
 	"github.com/gotmc/visa"
 )
 
+var _ visa.Resource = (*Connection)(nil)
+
 // Driver implements the visa.Driver interface.
 type Driver struct {
 }
