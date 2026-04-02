@@ -3,9 +3,9 @@ module github.com/gotmc/visa
 go 1.25.0
 
 require (
-	github.com/gotmc/asrl v0.9.0
-	github.com/gotmc/lxi v0.9.0
-	github.com/gotmc/usbtmc v0.8.0
+	github.com/gotmc/asrl v0.12.0
+	github.com/gotmc/lxi v0.12.0
+	github.com/gotmc/usbtmc v0.9.0
 )
 
 require (
