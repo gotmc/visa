@@ -20,8 +20,8 @@ var _ visa.Resource = (*Connection)(nil)
 type Driver struct{}
 
 // Open takes a VISA address string and returns a VISA resource.
-func (d Driver) Open(_ context.Context, address string) (visa.Resource, error) {
-	dev, err := asrl.NewDevice(address)
+func (d Driver) Open(ctx context.Context, address string) (visa.Resource, error) {
+	dev, err := asrl.NewDevice(ctx, address)
 	if err != nil {
 		return nil, err
 	}
@@ -54,45 +54,15 @@ func (c *Connection) WriteString(s string) (int, error) {
 }
 
 // ReadContext reads from the serial connection with context support for
-// cancellation and deadlines. If the context is cancelled, the underlying
-// read may still complete in the background.
+// cancellation and deadlines.
 func (c *Connection) ReadContext(ctx context.Context, p []byte) (int, error) {
-	type result struct {
-		n   int
-		err error
-	}
-	ch := make(chan result, 1)
-	go func() {
-		n, err := c.dev.Read(p)
-		ch <- result{n, err}
-	}()
-	select {
-	case <-ctx.Done():
-		return 0, ctx.Err()
-	case r := <-ch:
-		return r.n, r.err
-	}
+	return c.dev.ReadContext(ctx, p)
 }
 
 // WriteContext writes to the serial connection with context support for
-// cancellation and deadlines. If the context is cancelled, the underlying
-// write may still complete in the background.
+// cancellation and deadlines.
 func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
-	type result struct {
-		n   int
-		err error
-	}
-	ch := make(chan result, 1)
-	go func() {
-		n, err := c.dev.Write(p)
-		ch <- result{n, err}
-	}()
-	select {
-	case <-ctx.Done():
-		return 0, ctx.Err()
-	case r := <-ch:
-		return r.n, r.err
-	}
+	return c.dev.WriteContext(ctx, p)
 }
 
 // Command sends a formatted SCPI command to the connected resource.

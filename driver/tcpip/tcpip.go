@@ -44,24 +44,9 @@ func (c *Connection) Read(p []byte) (n int, err error) {
 }
 
 // ReadContext reads from the TCPIP connection with context support for
-// cancellation and deadlines. If the context is cancelled, the underlying
-// read may still complete in the background.
+// cancellation and deadlines.
 func (c *Connection) ReadContext(ctx context.Context, p []byte) (int, error) {
-	type result struct {
-		n   int
-		err error
-	}
-	ch := make(chan result, 1)
-	go func() {
-		n, err := c.dev.Read(p)
-		ch <- result{n, err}
-	}()
-	select {
-	case <-ctx.Done():
-		return 0, ctx.Err()
-	case r := <-ch:
-		return r.n, r.err
-	}
+	return c.dev.ReadContext(ctx, p)
 }
 
 // Write implements the Writer interface for Connection.
@@ -70,24 +55,9 @@ func (c *Connection) Write(p []byte) (n int, err error) {
 }
 
 // WriteContext writes to the TCPIP connection with context support for
-// cancellation and deadlines. If the context is cancelled, the underlying
-// write may still complete in the background.
+// cancellation and deadlines.
 func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
-	type result struct {
-		n   int
-		err error
-	}
-	ch := make(chan result, 1)
-	go func() {
-		n, err := c.dev.Write(p)
-		ch <- result{n, err}
-	}()
-	select {
-	case <-ctx.Done():
-		return 0, ctx.Err()
-	case r := <-ch:
-		return r.n, r.err
-	}
+	return c.dev.WriteContext(ctx, p)
 }
 
 // WriteString implements the StringWriter interface for Connection.
