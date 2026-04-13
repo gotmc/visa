@@ -53,16 +53,16 @@ func (c *Connection) WriteString(s string) (int, error) {
 	return c.dev.WriteString(s)
 }
 
-// ReadContext reads from the serial connection with context support for
-// cancellation and deadlines.
-func (c *Connection) ReadContext(ctx context.Context, p []byte) (int, error) {
-	return c.dev.ReadContext(ctx, p)
+// ReadBinary reads binary data from the serial connection without terminator
+// interpretation.
+func (c *Connection) ReadBinary(ctx context.Context, p []byte) (int, error) {
+	return c.dev.ReadBinary(ctx, p)
 }
 
-// WriteContext writes to the serial connection with context support for
-// cancellation and deadlines.
-func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
-	return c.dev.WriteContext(ctx, p)
+// WriteBinary writes binary data to the serial connection without adding a
+// terminator.
+func (c *Connection) WriteBinary(ctx context.Context, p []byte) (int, error) {
+	return c.dev.WriteBinary(ctx, p)
 }
 
 // Command sends a formatted SCPI command to the connected resource.

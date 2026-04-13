@@ -33,7 +33,7 @@ import (
 
 **Key interfaces:**
 - `Driver` — has `Open(ctx, address) (Resource, error)`, implemented by each driver package
-- `Resource` — `io.ReadWriteCloser` + `WriteString`, `ReadContext`, `WriteContext`, `Command(ctx, format, a...)`, `Query(ctx, s)`
+- `Resource` — `io.ReadWriteCloser` + `WriteString`, `ReadBinary`, `WriteBinary`, `Command(ctx, cmd, a...)`, `Query(ctx, cmd)`. Aligns with the `ivi.Transport` interface.
 
 **Core flow:** `visa.NewResource(ctx, address)` -> `determineInterfaceType()` parses the address prefix (USB/TCPIP/ASRL) -> looks up registered driver -> calls `driver.Open(ctx, address)`.
 

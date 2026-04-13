@@ -20,8 +20,8 @@ func (m *mockResource) Close() error                                          { 
 func (m *mockResource) Read(p []byte) (int, error)                            { return 0, nil }
 func (m *mockResource) Write(p []byte) (int, error)                           { return 0, nil }
 func (m *mockResource) WriteString(s string) (int, error)                     { return 0, nil }
-func (m *mockResource) ReadContext(_ context.Context, p []byte) (int, error)  { return 0, nil }
-func (m *mockResource) WriteContext(_ context.Context, p []byte) (int, error) { return 0, nil }
+func (m *mockResource) ReadBinary(_ context.Context, p []byte) (int, error)  { return 0, nil }
+func (m *mockResource) WriteBinary(_ context.Context, p []byte) (int, error) { return 0, nil }
 func (m *mockResource) Command(_ context.Context, _ string, _ ...any) error   { return nil }
 func (m *mockResource) Query(_ context.Context, _ string) (string, error)     { return "", nil }
 

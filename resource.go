@@ -40,8 +40,8 @@ type Resource interface {
 	Read(p []byte) (n int, err error)
 	Write(p []byte) (n int, err error)
 	WriteString(s string) (n int, err error)
-	ReadContext(ctx context.Context, p []byte) (n int, err error)
-	WriteContext(ctx context.Context, p []byte) (n int, err error)
+	ReadBinary(ctx context.Context, p []byte) (n int, err error)
+	WriteBinary(ctx context.Context, p []byte) (n int, err error)
 	Command(ctx context.Context, cmd string, a ...any) error
 	Query(ctx context.Context, cmd string) (value string, err error)
 }

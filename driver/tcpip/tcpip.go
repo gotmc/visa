@@ -43,10 +43,10 @@ func (c *Connection) Read(p []byte) (n int, err error) {
 	return c.dev.Read(p)
 }
 
-// ReadContext reads from the TCPIP connection with context support for
-// cancellation and deadlines.
-func (c *Connection) ReadContext(ctx context.Context, p []byte) (int, error) {
-	return c.dev.ReadContext(ctx, p)
+// ReadBinary reads binary data from the TCPIP connection without terminator
+// interpretation.
+func (c *Connection) ReadBinary(ctx context.Context, p []byte) (int, error) {
+	return c.dev.ReadBinary(ctx, p)
 }
 
 // Write implements the Writer interface for Connection.
@@ -54,10 +54,10 @@ func (c *Connection) Write(p []byte) (n int, err error) {
 	return c.dev.Write(p)
 }
 
-// WriteContext writes to the TCPIP connection with context support for
-// cancellation and deadlines.
-func (c *Connection) WriteContext(ctx context.Context, p []byte) (int, error) {
-	return c.dev.WriteContext(ctx, p)
+// WriteBinary writes binary data to the TCPIP connection without adding a
+// terminator.
+func (c *Connection) WriteBinary(ctx context.Context, p []byte) (int, error) {
+	return c.dev.WriteBinary(ctx, p)
 }
 
 // WriteString implements the StringWriter interface for Connection.
