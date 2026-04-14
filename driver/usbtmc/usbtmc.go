@@ -16,9 +16,9 @@ import (
 
 var _ visa.Resource = (*Connection)(nil)
 
-// Driver implements the visa.Driver interface.
-type Driver struct {
-}
+// Driver implements the visa.Driver interface for USB Test & Measurement Class
+// (USBTMC) devices.
+type Driver struct{}
 
 // Open opens a VISA resource given a VISA address string. The upstream usbtmc
 // library does not natively support context for device creation, so
@@ -57,6 +57,16 @@ type Connection struct {
 	dev *usbtmc.Device
 }
 
+// Close closes the USBTMC connection.
+func (c *Connection) Close() error {
+	devErr := c.dev.Close()
+	ctxErr := c.ctx.Close()
+	if devErr != nil {
+		return devErr
+	}
+	return ctxErr
+}
+
 // Read implements the Reader interface for Connection.
 func (c *Connection) Read(p []byte) (n int, err error) {
 	return c.dev.Read(p)
@@ -77,16 +87,6 @@ func (c *Connection) Write(p []byte) (n int, err error) {
 // terminator.
 func (c *Connection) WriteBinary(ctx context.Context, p []byte) (int, error) {
 	return c.dev.WriteBinary(ctx, p)
-}
-
-// Close closes the USBTMC connection.
-func (c *Connection) Close() error {
-	devErr := c.dev.Close()
-	ctxErr := c.ctx.Close()
-	if devErr != nil {
-		return devErr
-	}
-	return ctxErr
 }
 
 // WriteString implements the StringWriter interface for Connection.
