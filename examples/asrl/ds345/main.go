@@ -40,24 +40,24 @@ func main() {
 	log.Printf("%.2fs to setup VISA resource\n", time.Since(start).Seconds())
 
 	// Configure function generator
-	fg.WriteString("*CLS\n")
+	if err := fg.Command(ctx, "*CLS"); err != nil {
+		log.Fatal(err)
+	}
 
 	// Query using the query method
 	queries := []string{"volt", "freq", "volt:offs", "volt:unit"}
-	queryRange(fg, queries)
+	queryRange(ctx, fg, queries)
 
-	// Close the function generator and and check for errors.
+	// Close the function generator and check for errors.
 	err = fg.Close()
 	if err != nil {
 		log.Printf("error closing fg: %s", err)
 	}
 }
 
-func queryRange(fg visa.Resource, r []string) {
-	ctx := context.Background()
+func queryRange(ctx context.Context, fg visa.Resource, r []string) {
 	for _, q := range r {
-		ws := fmt.Sprintf("%s?\n", q)
-		s, err := fg.Query(ctx, ws)
+		s, err := fg.Query(ctx, fmt.Sprintf("%s?", q))
 		if err != nil {
 			log.Printf("Error reading: %v", err)
 		} else {

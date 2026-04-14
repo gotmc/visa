@@ -9,7 +9,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"time"
 
@@ -42,17 +41,28 @@ func main() {
 	log.Printf("%.2fs to setup VISA resource\n", time.Since(start).Seconds())
 
 	// Configure function generator
-	fg.WriteString("*CLS\n")
-	fg.WriteString("burst:state off\n")
-	fg.Write([]byte("apply:sinusoid 2340, 0.1, 0.0\n")) // Write using byte slice
-	io.WriteString(fg, "burst:internal:period 0.112\n") // WriteString using io's Writer interface
-	fg.WriteString("burst:internal:period 0.112\n")     // WriteString
-	fg.WriteString("burst:ncycles 131\n")
-	fg.WriteString("burst:state on\n")
+	if err := fg.Command(ctx, "*CLS"); err != nil {
+		log.Fatal(err)
+	}
+	if err := fg.Command(ctx, "burst:state off"); err != nil {
+		log.Fatal(err)
+	}
+	if err := fg.Command(ctx, "apply:sinusoid %d, %.1f, %.1f", 2340, 0.1, 0.0); err != nil {
+		log.Fatal(err)
+	}
+	if err := fg.Command(ctx, "burst:internal:period %.3f", 0.112); err != nil {
+		log.Fatal(err)
+	}
+	if err := fg.Command(ctx, "burst:ncycles %d", 131); err != nil {
+		log.Fatal(err)
+	}
+	if err := fg.Command(ctx, "burst:state on"); err != nil {
+		log.Fatal(err)
+	}
 
 	// Query using the query method
 	queries := []string{"volt", "freq", "volt:offs", "volt:unit"}
-	queryRange(fg, queries)
+	queryRange(ctx, fg, queries)
 
 	// Close the function generator and USBTMC context and check for errors.
 	err = fg.Close()
@@ -61,11 +71,9 @@ func main() {
 	}
 }
 
-func queryRange(fg visa.Resource, r []string) {
-	ctx := context.Background()
+func queryRange(ctx context.Context, fg visa.Resource, r []string) {
 	for _, q := range r {
-		ws := fmt.Sprintf("%s?\n", q)
-		s, err := fg.Query(ctx, ws)
+		s, err := fg.Query(ctx, fmt.Sprintf("%s?", q))
 		if err != nil {
 			log.Printf("Error reading: %v", err)
 		} else {

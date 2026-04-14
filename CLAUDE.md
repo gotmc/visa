@@ -12,11 +12,15 @@ Go implementation of the Virtual Instrument Software Architecture (VISA) resourc
 just check          # fmt and vet
 just unit           # fmt, vet, then run unit tests with -race -short
 just unit -v        # verbose unit tests (extra flags passed through)
+just unit -run TestName  # run a single test
 just lint           # golangci-lint (config in .golangci.yaml)
 just cover          # HTML coverage report (unit tests by default)
 just cover all      # HTML coverage for all tests
-go test -run TestName ./...  # run a single test
+just tidy           # go mod tidy + verify
+just docs           # local pkgsite viewer
 ```
+
+Example recipes require hardware: `just k33220tcp <ip>`, `just k33220usb <sn>`, `just ds345 <port>`.
 
 Prefer `just` (no Makefile in this repo). Requires Go 1.25+.
 
@@ -42,7 +46,7 @@ import (
 - `usbtmc` -> `github.com/gotmc/usbtmc`
 - `asrl` -> `github.com/gotmc/asrl`
 
-Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface. Most drivers delegate context directly to upstream libraries; the `usbtmc` driver still uses a select/channel goroutine pattern to race `Open()` against `ctx.Done()` because the upstream `usbtmc.NewContext`/`NewDevice` calls don't accept a context.
+Each driver wraps the upstream device type in a `Connection` struct that satisfies the `visa.Resource` interface, verified at compile time with `var _ visa.Resource = (*Connection)(nil)`. Most drivers delegate context directly to upstream libraries; the `usbtmc` driver still uses a select/channel goroutine pattern to race `Open()` against `ctx.Done()` because the upstream `usbtmc.NewContext`/`NewDevice` calls don't accept a context.
 
 **Error handling:** Sentinel errors in `errors.go` (`ErrInvalidAddress`, `ErrUnknownInterfaceType`, `ErrDriverNotRegistered`) are wrapped with `%w` for programmatic checking via `errors.Is`. `Register()` panics on duplicate driver registration (fail-fast by design).
 
