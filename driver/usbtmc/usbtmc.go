@@ -9,6 +9,7 @@ package usbtmc
 
 import (
 	"context"
+	"errors"
 
 	"github.com/gotmc/usbtmc"
 	"github.com/gotmc/visa"
@@ -61,10 +62,7 @@ type Connection struct {
 func (c *Connection) Close() error {
 	devErr := c.dev.Close()
 	ctxErr := c.ctx.Close()
-	if devErr != nil {
-		return devErr
-	}
-	return ctxErr
+	return errors.Join(devErr, ctxErr)
 }
 
 // Read implements the Reader interface for Connection.
